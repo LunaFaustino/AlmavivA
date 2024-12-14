@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let deleteRow = null;
     let deleteId = null;
 
-
     // EVENT LISTENERS
     tableBody.addEventListener('click', (e) => {
         if (e.target.closest('.edit-btn')) {
@@ -18,6 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const id = row.querySelector('.delete-btn').dataset.id;
             deletePedido(id, row);
         }
+    });
+
+    searchInput.addEventListener('input', (e) => {
+        const filter = e.target.value;
+        loadPedidos(filter);
     });
 
     document.getElementById('editForm').addEventListener('submit', (e) => {
@@ -36,24 +40,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('confirmDelete').addEventListener('click', () => {
         if (deleteRow && deleteId) {
-            // Rremovendo do localStorage
+            // Removendo do localStorage
             const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
             const updatedPedidos = pedidos.filter(pedido => pedido.id !== deleteId);
             localStorage.setItem('pedidos', JSON.stringify(updatedPedidos));
             
-            // removendo da UI
+            // Removendo da UI
             deleteRow.remove();
             
-            // fechando o modal
+            // Fechando o modal
             const modal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
             modal.hide();
             
-            // resetando as variáveis
+            // Resetando as variáveis
             deleteRow = null;
             deleteId = null;
         }
     });
-
 
     // FUNÇÕES
     function loadPedidos(filter = '') {
@@ -105,12 +108,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const produto = document.getElementById('editProduto').value;
             const quantidade = document.getElementById('editQuantidade').value;
             
-            // atualizando o UI do site
+            // Atualizando a UI
             currentEditingRow.querySelector('[data-marca]').textContent = marca;
             currentEditingRow.querySelector('[data-produto]').textContent = produto;
             currentEditingRow.querySelector('[data-quantidade]').textContent = quantidade;
             
-            // atualizando o  localStorage
+            // Atualizando o localStorage
             const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
             const pedidoIndex = pedidos.findIndex(p => p.id === id);
             if (pedidoIndex !== -1) {
@@ -132,9 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.show();
     }
 
-
     // INICIALIZAÇÕES
     window.saveEdit = saveEdit;
     loadPedidos();
-    
 });
